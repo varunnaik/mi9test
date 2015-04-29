@@ -5,7 +5,7 @@ var app = express();
 app.use(bodyParser.json());
 
 app.use (function (error, request, response, next){
-    response.status(406).send('Invalid JSON');
+    response.status(400).json({'error': 'Could not decode request: JSON parsing failed'});
 });
 
 app.set('port', (process.env.PORT || 3000));
@@ -20,7 +20,8 @@ app.post('/', function(request, response) {
     var matchedShows = [];
 
     if (!json.payload) {
-        response.status(406).send('Could not parse; Unexpected JSON in input.');
+        response.status(406).end('Could not parse; Unexpected JSON in input.');
+        return;
     }
 
     json.payload.forEach(function(show) {
